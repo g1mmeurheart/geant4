@@ -15,11 +15,12 @@ class XXDetectorConstruction(G4VUserDetectorConstruction):
   def Construct(self):
     nist = G4NistManager.Instance()
 
-    envelop_x = 10*cm
-    envelop_y = 10*cm
-    envelop_z = 10*cm
+    envelop_x = 20*cm
+    envelop_y = 20*cm
+    envelop_z = 20*cm
 
     envelop_mat = nist.FindOrBuildMaterial("G4_AIR")
+    envelop_mat1 = nist.FindOrBuildMaterial("G4_AIR")
 
     sphere_rad = 7*cm
     sphere_rad1 = 5*cm
@@ -42,6 +43,14 @@ class XXDetectorConstruction(G4VUserDetectorConstruction):
 
     pWorld = G4PVPlacement(None, G4ThreeVector(),
                            lWorld, "World", None, False,
+                           0, checkOverlaps)
+    sEnvelop = G4Box("Envelop", 0.5*envelop_x, 0.5*envelop_y,
+                   0.5*envelop_z)
+    
+    lEnvelop = G4LogicalVolume(sEnvelop, envelop_mat, "Envelop")
+
+    pEnvelop = G4PVPlacement(None, G4ThreeVector(),
+                           lEnvelop, "Envelop", lWorld, True,
                            0, checkOverlaps)
 
     sSphere = G4Orb("Head", sphere_rad)
