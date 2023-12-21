@@ -3,7 +3,7 @@
 import sys
 from geant4_pybind import *
 
-class XXDetectorConstruction(G4VUserDetectorConstruction):
+class X2DetectorConstruction(G4VUserDetectorConstruction):
   """
   Simple model: a sphere with water in the box with air.
   """
@@ -26,8 +26,8 @@ class XXDetectorConstruction(G4VUserDetectorConstruction):
     sphere_rad1 = 3*cm
     sphere_rad2 = 2*cm
     mat = nist.FindOrBuildMaterial("G4_WATER")
-    mat1 = nist.FindOrBuildMaterial("G4_Fe")
-    mat2 = nist.FindOrBuildMaterial("G4_C")
+    mat1 = nist.FindOrBuildMaterial("G4_C")
+    mat2 = nist.FindOrBuildMaterial("G4_Fe")
 
 
     checkOverlaps = True
@@ -58,17 +58,17 @@ class XXDetectorConstruction(G4VUserDetectorConstruction):
     sSphere = G4Orb("Head", sphere_rad)
     lSphere = G4LogicalVolume(sSphere, mat, "Head")
     G4PVPlacement(None, G4ThreeVector(), lSphere,
-                  "Head", lWorld, True, 0, checkOverlaps)
+                  "Head", lEnvelop, True, 0, checkOverlaps)
 
-    sOrb1 = G4Orb("Bullet", sphere_rad1)
-    lOrb1 = G4LogicalVolume(sOrb1, mat, "Bullet")
+    sOrb1 = G4Orb("Coal", sphere_rad1)
+    lOrb1 = G4LogicalVolume(sOrb1, mat1, "Coal")
     G4PVPlacement(None, G4ThreeVector(0,0,-0.25*sphere_rad), lOrb1,
-                  "Bullet", lSphere, True, 0, checkOverlaps)
-
-    sOrb2 = G4Orb("Coal", sphere_rad2)
-    lOrb2 = G4LogicalVolume(sOrb2, mat, "Coal")
-    G4PVPlacement(None, G4ThreeVector(0,0,0.5*sphere_rad), lOrb2,
                   "Coal", lSphere, True, 0, checkOverlaps)
+
+    sOrb2 = G4Orb("Bullet", sphere_rad2)
+    lOrb2 = G4LogicalVolume(sOrb2, mat2, "Bullet")
+    G4PVPlacement(None, G4ThreeVector(0,0,0.5*sphere_rad), lOrb2,
+                  "Bullet", lSphere, True, 0, checkOverlaps)
 
 
     self.fScoringVolume = lSphere
@@ -84,7 +84,7 @@ if len(sys.argv) == 1:
 
 runManager = G4RunManagerFactory.CreateRunManager(G4RunManagerType.Serial)
 
-runManager.SetUserInitialization(XXDetectorConstruction())
+runManager.SetUserInitialization(X2DetectorConstruction())
 
 # Physics list
 physicsList = QBBC()
@@ -93,7 +93,7 @@ physicsList.SetVerboseLevel(1)
 runManager.SetUserInitialization(physicsList)
 
 # User action initialization
-#runManager.SetUserInitialization(XXActionInitialization())
+#runManager.SetUserInitialization(X2ActionInitialization())
 
 visManager = G4VisExecutive()
 # G4VisExecutive can take a verbosity argument - see /vis/verbose guidance.
