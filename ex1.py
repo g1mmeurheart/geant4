@@ -3,7 +3,7 @@
 import sys
 from geant4_pybind import *
 
-class XXDetectorConstruction(G4VUserDetectorConstruction):
+class X1DetectorConstruction(G4VUserDetectorConstruction):
   """
   Simple model: a sphere with water in the box with air.
   """
@@ -58,7 +58,7 @@ class XXDetectorConstruction(G4VUserDetectorConstruction):
     sSphere = G4Orb("Head", sphere_rad)
     lSphere = G4LogicalVolume(sSphere, mat, "Head")
     G4PVPlacement(None, G4ThreeVector(), lSphere,
-                  "Head", lWorld, True, 0, checkOverlaps)
+                  "Head", lEnvelop,True, 0, checkOverlaps)
 
     self.fScoringVolume = lSphere
 
@@ -73,7 +73,7 @@ if len(sys.argv) == 1:
 
 runManager = G4RunManagerFactory.CreateRunManager(G4RunManagerType.Serial)
 
-runManager.SetUserInitialization(XXDetectorConstruction())
+runManager.SetUserInitialization(X1DetectorConstruction())
 
 # Physics list
 physicsList = QBBC()
