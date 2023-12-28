@@ -62,7 +62,11 @@ class X4DetectorConstruction(G4VUserDetectorConstruction):
 
     sOrb1 = G4Orb("Coal", sphere_rad1)
     lOrb1 = G4LogicalVolume(sOrb1, mat1, "Coal")
+<<<<<<< HEAD
     G4PVPlacement(None, G4ThreeVector(0,0,-0.25*sphere_rad), lOrb1,
+=======
+    G4PVPlacement(None, G4ThreeVector(0,0,+0.25*sphere_rad), lOrb1,
+>>>>>>> c07c367 (Решение задачи 4)
                   "Coal", lSphere, True, 0, checkOverlaps)
 
     sOrb2 = G4Orb("Bullet", sphere_rad2)
