@@ -20,9 +20,9 @@ class ExamDetectorConstruction(G4VUserDetectorConstruction):
 
       envelop_mat = nist.FindOrBuildMaterial("G4_AIR")
   
-      world_x = 1.2*envelop_x
-      world_y = 1.2*envelop_y
-      world_z = 1.2*envelop_z
+      world_x = 1.3*envelop_x
+      world_y = 1.3*envelop_y
+      world_z = 1.3*envelop_z
 
       leg_r = 0.3*envelop_x
       leg_h = 0.5*envelop_z
@@ -55,11 +55,12 @@ class ExamDetectorConstruction(G4VUserDetectorConstruction):
       sLeg = G4Tubs("Leg", 0, leg_r, leg_h, 2*math.pi, 2*math.pi)
       
       sProsthesis = G4Tubs("Prosthesis", 0, 0.05*envelop_x, 0.5*envelop_y, 2*math.pi, 2*math.pi)
-      
-      #sCut = G4SubtractionSolid("Noga", sProsthesis, sLeg, zTrans)
+
+      sCut = G4SubtractionSolid ("Noga", sLeg, sProsthesis, zTrans)
+
 
 #.....Logical volume creating
-      lLeg = G4LogicalVolume(sLeg, mat_leg, "Leg")
+      lLeg = G4LogicalVolume(sCut, mat_leg, "Leg")
       
       lProsthesis = G4LogicalVolume(sProsthesis, mat_p, "Prosthesis")
 
@@ -70,7 +71,7 @@ class ExamDetectorConstruction(G4VUserDetectorConstruction):
 
       G4PVPlacement(None, G4ThreeVector(), lLeg, "Leg", lBox, True, 0, checkOverlaps)
       
-      G4PVPlacement(None, G4ThreeVector(0.1*envelop_x, 0.05*envelop_y, 0), lProsthesis, "Prosthesis", lLeg, True, 0, checkOverlaps)
+      G4PVPlacement(None, G4ThreeVector(0.1*envelop_x, 0, 0), lProsthesis, "Prosthesis", lLeg, True, 0, checkOverlaps)
 
       self.fScoringVolume = lLeg
 
