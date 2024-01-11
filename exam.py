@@ -69,7 +69,7 @@ class ExamDetectorConstruction(G4VUserDetectorConstruction):
 
 #.....Physical volume creating
 
-      G4PVPlacement(None, G4ThreeVector(), lLeg, "Leg", lWorld, True, 0, checkOverlaps)
+      G4PVPlacement(None, G4ThreeVector(), lLeg, "Leg", lBox, True, 0, checkOverlaps)
       G4PVPlacement(None, G4ThreeVector(0.1*envelop_x, 0.05*envelop_y, 0), lProsthesis, "Prosthesis", lLeg, True, 0, checkOverlaps)
 
       self.fScoringVolume = lLeg
