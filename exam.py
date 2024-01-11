@@ -60,7 +60,7 @@ class ExamDetectorConstruction(G4VUserDetectorConstruction):
 
 
 #.....Logical volume creating
-      lLeg = G4LogicalVolume(sCut, mat_leg, "Leg")
+      lCut = G4LogicalVolume(sCut, mat_leg, "Leg")
       
       lProsthesis = G4LogicalVolume(sProsthesis, mat_p, "Prosthesis")
 
@@ -69,11 +69,11 @@ class ExamDetectorConstruction(G4VUserDetectorConstruction):
 #.....Physical volume creating
       G4PVPlacement(None, G4ThreeVector(), lBox, "Box", lWorld, False, 0, checkOverlaps)
 
-      G4PVPlacement(None, G4ThreeVector(), lLeg, "Leg", lBox, True, 0, checkOverlaps)
+      G4PVPlacement(None, G4ThreeVector(), lCut, "Leg", lBox, True, 0, checkOverlaps)
       
-      G4PVPlacement(None, G4ThreeVector(0.1*envelop_x, 0, 0), lProsthesis, "Prosthesis", lLeg, True, 0, checkOverlaps)
+      G4PVPlacement(None, G4ThreeVector(0.1*envelop_x, 0, 0), lProsthesis, "Prosthesis", lCut, True, 0, checkOverlaps)
 
-      self.fScoringVolume = lLeg
+      self.fScoringVolume = lCut
 
       return pWorld
 #End of detector construction
