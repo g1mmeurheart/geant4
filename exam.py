@@ -43,7 +43,6 @@ class ExamDetectorConstruction(G4VUserDetectorConstruction):
       checkOverlaps = True
 
 #.....World creating 
-           
       sWorld = G4Box("World", 0.5*world_x, 0.5*world_y, 0.5*world_z)
  
       lWorld = G4LogicalVolume(sWorld, envelop_mat, "World")
@@ -51,25 +50,26 @@ class ExamDetectorConstruction(G4VUserDetectorConstruction):
       pWorld = G4PVPlacement(None, G4ThreeVector(), lWorld, "World", None, False, 0, checkOverlaps)
 
 #.....Geometry volume creating
-      sBox = G4Box("Envelop", 0.5*box_x, 0.5*box_y,0.5*box_z)
-    
-      lBox = G4LogicalVolume(sBox, envelop_mat, "Box")
-
-      pBox = G4PVPlacement(None, G4ThreeVector(),lBox, "Box", lWorld, True, 0, checkOverlaps)
-
+      sBox = G4Box("Case", 0.5*box_x, 0.5*box_y, 0.5*box_z)
 
       sLeg = G4Tubs("Leg", 0, leg_r, leg_h, 2*math.pi, 2*math.pi)
+      
       sProsthesis = G4Tubs("Prosthesis", 0, 0.05*envelop_x, 0.5*envelop_y, 2*math.pi, 2*math.pi)
       
+      #sCut = G4SubtractionSolid("Noga", sProsthesis, sLeg, zTrans)
 
 #.....Logical volume creating
-
       lLeg = G4LogicalVolume(sLeg, mat_leg, "Leg")
+      
       lProsthesis = G4LogicalVolume(sProsthesis, mat_p, "Prosthesis")
 
+      lBox = G4LogicalVolume(sBox, envelop_mat, "Box")
+
 #.....Physical volume creating
+      G4PVPlacement(None, G4ThreeVector(), lBox, "Box", lWorld, False, 0, checkOverlaps)
 
       G4PVPlacement(None, G4ThreeVector(), lLeg, "Leg", lBox, True, 0, checkOverlaps)
+      
       G4PVPlacement(None, G4ThreeVector(0.1*envelop_x, 0.05*envelop_y, 0), lProsthesis, "Prosthesis", lLeg, True, 0, checkOverlaps)
 
       self.fScoringVolume = lLeg
