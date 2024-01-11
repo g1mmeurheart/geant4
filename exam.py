@@ -19,6 +19,17 @@ class ExamDetectorConstruction(G4VUserDetectorConstruction):
       envelop_z = 30*cm
 
       envelop_mat = nist.FindOrBuildMaterial("G4_AIR")
+  
+      world_x = 1.2*envelop_x
+      world_y = 1.2*envelop_y
+      world_z = 1.2*envelop_z
+
+      leg_r = 0.3*envelop_x
+      leg_h = 0.5*envelop_z
+
+      box_x = 2.2*leg_r
+      box_y = 2.2*leg_r
+      box_z = 2.2*leg_h
 
       zTrans = G4Transform3D(G4RotationMatrix(), G4ThreeVector(0.1*envelop_x, 0, 0.05*envelop_z))
 
@@ -32,26 +43,24 @@ class ExamDetectorConstruction(G4VUserDetectorConstruction):
       checkOverlaps = True
 
 #.....World creating 
-      world_x = 1.2*envelop_x
-      world_y = 1.2*envelop_y
-      world_z = 1.2*envelop_z
-
+           
       sWorld = G4Box("World", 0.5*world_x, 0.5*world_y, 0.5*world_z)
  
       lWorld = G4LogicalVolume(sWorld, envelop_mat, "World")
  
       pWorld = G4PVPlacement(None, G4ThreeVector(), lWorld, "World", None, False, 0, checkOverlaps)
 
-      sEnvelop = G4Box("Envelop", 0.5*envelop_x, 0.5*envelop_y,0.5*envelop_z)
-    
-      lEnvelop = G4LogicalVolume(sEnvelop, envelop_mat, "Envelop")
-
-      pEnvelop = G4PVPlacement(None, G4ThreeVector(),lEnvelop, "Envelop", lWorld, True, 0, checkOverlaps)
 #.....Geometry volume creating
+      sBox = G4Box("Envelop", 0.5*box_x, 0.5*box_y,0.5*box_z)
+    
+      lBox = G4LogicalVolume(sBox, envelop_mat, "Box")
 
-      sLeg = G4Tubs("Leg", 0, 0.3*envelop_x, 0.5*envelop_y, 2*math.pi, 2*math.pi)
+      pBox = G4PVPlacement(None, G4ThreeVector(),lBox, "Box", lWorld, True, 0, checkOverlaps)
+
+
+      sLeg = G4Tubs("Leg", 0, leg_r, leg_h, 2*math.pi, 2*math.pi)
       sProsthesis = G4Tubs("Prosthesis", 0, 0.05*envelop_x, 0.5*envelop_y, 2*math.pi, 2*math.pi)
-      sCut = G4SubtractionSolid("Cut", sProsthesis, sLeg, zTrans)
+      
 
 #.....Logical volume creating
 
@@ -101,7 +110,7 @@ class ExamPrimaryGeneratorAction(G4VUserPrimaryGeneratorAction):
         particleTable = G4ParticleTable.GetParticleTable()
         particle = particleTable.FindParticle("e+")
         self.fParticleGun.SetParticleDefinition(particle)
-        self.fParticleGun.SetParticleMomentumDirection(G4ThreeVector(1, 1, 1))
+        self.fParticleGun.SetParticleMomentumDirection(G4ThreeVector(1, 1, 0))
         self.fParticleGun.SetParticleEnergy(400*keV)
 
     def GeneratePrimaries(self, anEvent):
@@ -110,7 +119,7 @@ class ExamPrimaryGeneratorAction(G4VUserPrimaryGeneratorAction):
         envSizeZ = 0
     
         if self.fEnvelopeBox == None:
-            envLV = G4LogicalVolumeStore.GetInstance().GetVolume("World")
+            envLV = G4LogicalVolumeStore.GetInstance().GetVolume("Box")
 
             if envLV != None:
                 self.fEnvelopeBox = envLV.GetSolid()
@@ -125,9 +134,9 @@ class ExamPrimaryGeneratorAction(G4VUserPrimaryGeneratorAction):
                 msg += "The gun will be place at the center."
                 G4Exception("ExamPrimaryGeneratorAction::GeneratePrimaries()", "MyCode0002", G4ExceptionSeverity.JustWarning, msg)
 
-            x0 = -0.35 * envSizeX 
-            y0 = -0.35 * envSizeY
-            z0 = -0.35 * envSizeZ
+            x0 = -0.5 * envSizeX 
+            y0 = -0.5 * envSizeY
+            z0 = 0
             self.fParticleGun.SetParticlePosition(G4ThreeVector(x0, y0, z0))
             self.fParticleGun.GeneratePrimaryVertex(anEvent)
 #End of primary generator
