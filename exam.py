@@ -50,7 +50,7 @@ class ExamDetectorConstruction(G4VUserDetectorConstruction):
       pWorld = G4PVPlacement(None, G4ThreeVector(), lWorld, "World", None, False, 0, checkOverlaps)
 
 #.....Geometry volume creating
-      sBox = G4Box("Case", 0.5*box_x, 0.5*box_y, 0.5*box_z)
+      sBox = G4Box("Box", 0.5*box_x, 0.5*box_y, 0.5*box_z)
 
       sLeg = G4Tubs("Leg", 0, leg_r, leg_h, 2*math.pi, 2*math.pi)
       
